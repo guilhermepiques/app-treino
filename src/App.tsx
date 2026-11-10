@@ -6,6 +6,8 @@ import { HistoricoTab } from './screens/HistoricoTab'
 import { EvolucaoTab } from './screens/EvolucaoTab'
 import { IconChart, IconDumbbell, IconFicha, IconHistory } from './components/Icons'
 import { Toaster } from './components/ui'
+import { useSync } from './lib/sync'
+import { AuthScreen, NewPasswordScreen } from './screens/AuthScreen'
 
 type Tab = 'ficha' | 'treinar' | 'evolucao' | 'historico'
 
@@ -22,6 +24,7 @@ const readTab = (): Tab => {
 export function App() {
   const [tab, setTab] = useState<Tab>(readTab)
   const active = useActiveWorkout()
+  const sync = useSync()
 
   useEffect(() => {
     try {
@@ -31,6 +34,20 @@ export function App() {
     }
     window.scrollTo(0, 0)
   }, [tab])
+
+  if (sync.enabled && !sync.ready) return <div className="app" />
+  const gate = sync.recovery
+    ? <NewPasswordScreen />
+    : sync.enabled && ((!sync.user && !sync.skipped) || (sync.user && !sync.linked))
+      ? <AuthScreen />
+      : null
+  if (gate)
+    return (
+      <div className="app">
+        {gate}
+        <Toaster />
+      </div>
+    )
 
   return (
     <div className="app">

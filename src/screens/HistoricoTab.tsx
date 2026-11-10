@@ -8,6 +8,7 @@ import { dayOfMonth, fmtMonth, isoFromTs, relDate, weekday } from '../lib/util'
 import { IconChevron } from '../components/Icons'
 import { TopBar, toast } from '../components/ui'
 import { WorkoutView } from './WorkoutView'
+import { askLogin, signOut, syncNow, unsyncedBeforeSignOut, useSync } from '../lib/sync'
 
 export function HistoricoTab() {
   const [workoutId, setWorkoutId] = useState<string | null>(null)
@@ -28,6 +29,7 @@ export function HistoricoTab() {
       <TopBar title="Histórico" sub={data.workouts.length ? `${data.workouts.length} treinos finalizados` : undefined} />
       <main className="page">
         <WorkoutList workouts={data.workouts} sets={data.sets} onOpen={setWorkoutId} />
+        <AccountCard />
         <BackupCard />
       </main>
     </>
@@ -85,14 +87,17 @@ function WorkoutList({
 }
 
 function BackupCard() {
+  const sync = useSync()
   const last = useLiveQuery(() => getMeta<number>('lastBackup'))
   const file = useRef<HTMLInputElement>(null)
   return (
     <section className="card backup">
       <strong>Backup</strong>
       <p className="muted small">
-        Por enquanto os dados ficam só neste celular. Exporte um backup de vez em quando, e sempre antes de trocar de
-        celular. No iPhone, escolha “Salvar em Arquivos”.
+        {sync.user
+          ? 'Seus treinos já ficam na nuvem. O arquivo de backup é só uma cópia extra, se quiser.'
+          : 'Sem conta, os dados ficam só neste celular. Exporte um backup de vez em quando, e sempre antes de trocar de celular.'}{' '}
+        No iPhone, escolha “Salvar em Arquivos”.
       </p>
       <p className="small">
         Último backup: {last ? relDate(isoFromTs(last)) : 'nunca'}
@@ -123,6 +128,75 @@ function BackupCard() {
           }
         }}
       />
+    </section>
+  )
+}
+
+function sinceText(ts: number) {
+  const min = Math.round((Date.now() - ts) / 60000)
+  if (min < 1) return 'agora'
+  if (min < 60) return `há ${min} min`
+  return new Date(ts).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+}
+
+function AccountCard() {
+  const sync = useSync()
+  if (!sync.enabled) return null
+
+  if (!sync.user)
+    return (
+      <section className="card backup">
+        <strong>Conta</strong>
+        <p className="muted small">
+          Você está usando sem conta: os treinos ficam só neste celular. Entre para guardar tudo na nuvem e usar em
+          outro aparelho.
+        </p>
+        <button className="btn primary" onClick={askLogin}>
+          Entrar ou criar conta
+        </button>
+      </section>
+    )
+
+  const status =
+    sync.status === 'syncing'
+      ? 'Sincronizando…'
+      : sync.status === 'offline'
+        ? 'Sem internet. As mudanças vão para a nuvem quando o sinal voltar.'
+        : sync.status === 'error'
+          ? `Não deu para sincronizar: ${sync.error}`
+          : sync.lastSync
+            ? `Tudo salvo na nuvem · ${sinceText(sync.lastSync)}`
+            : 'Conectado'
+
+  return (
+    <section className="card backup">
+      <strong>Conta</strong>
+      <p className="small">{sync.user.email}</p>
+      <p className={`small sync-status ${sync.status}`} role="status">
+        {status}
+      </p>
+      <div className="row gap">
+        <button className="btn ghost grow" onClick={() => syncNow()} disabled={sync.status === 'syncing'}>
+          Sincronizar agora
+        </button>
+        <button
+          className="btn text danger"
+          onClick={async () => {
+            const pending = await unsyncedBeforeSignOut()
+            const ok = pending
+              ? confirm(
+                  `${pending} alteração(ões) ainda não foram para a nuvem (sem internet?). Se sair agora, elas se perdem. Sair mesmo assim?`,
+                )
+              : confirm('Sair da conta? Seus treinos continuam salvos na nuvem e saem deste celular.')
+            if (ok) {
+              await signOut()
+              toast('Você saiu da conta')
+            }
+          }}
+        >
+          Sair
+        </button>
+      </div>
     </section>
   )
 }

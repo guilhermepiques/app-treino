@@ -1904,3 +1904,78 @@ p {
   border-radius: 50%;
   background: var(--gold);
 }
+
+/* ---------- login ---------- */
+
+.auth {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100dvh;
+  padding: calc(var(--safe-top) + 40px) 20px calc(var(--safe-bottom) + 24px);
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.auth-logo {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.auth-brand h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.auth-brand p {
+  max-width: 300px;
+}
+
+.small-lead {
+  font-size: 22px;
+  margin: 0;
+}
+
+.auth-msg {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.auth-msg.error {
+  background: rgba(255, 107, 107, 0.14);
+  color: #ffb3b3;
+}
+
+.auth-skip {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 24px;
+}
+
+.sync-status {
+  color: var(--text-2);
+}
+
+.sync-status.error,
+.sync-status.offline {
+  color: var(--down);
+}

@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  // supabase-js deixa o pacote maior; tudo fica guardado no celular (offline), então tudo bem.
+  build: { chunkSizeWarningLimit: 900 },
   plugins: [
     react(),
     VitePWA({

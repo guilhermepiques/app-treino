@@ -6,6 +6,7 @@ import '@fontsource/barlow-condensed/latin-700.css'
 import './styles.css'
 import { App } from './App'
 import { db, requestPersistence, seedLibrary } from './db'
+import { initSync } from './lib/sync'
 
 registerSW({ immediate: true })
 
@@ -23,3 +24,4 @@ seedLibrary()
   })
 
 requestPersistence()
+initSync()

@@ -14,7 +14,9 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 
 ## Como está organizado
 
-- `src/db.ts`: tipos e banco local (IndexedDB via Dexie). **Os dados ficam só no aparelho.**
+- `src/db.ts`: tipos e banco local (IndexedDB via Dexie). Marca o que mudou (`dirty`) e o que foi apagado (`tombstones`) para mandar à nuvem.
+- `src/config.ts`: URL e chave pública do Supabase (não são segredo; a proteção é o RLS).
+- `src/lib/sync.ts` e `src/lib/syncEngine.ts`: login (e-mail e senha) e sincronização. Teste: `npm run test:sync`.
 - `src/data/library.ts`: lista pronta de exercícios, grupos musculares e tipos de carga.
 - `src/lib/stats.ts`: regra de "anterior" e "melhor série".
 - `src/lib/analytics.ts`: cálculos da aba Evolução (carga, força estimada, volume, resumo do mês, séries por grupo).
@@ -32,10 +34,19 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 - O histórico é por exercício, não por dia ou ficha: trocar de ficha não perde nada.
 - Trocar ou tirar um exercício durante o treino vale só para aquele treino; a ficha não muda.
 
+### Login e nuvem
+
+- O app continua funcionando sem internet: os dados ficam no celular e vão para a nuvem quando há sinal
+  (ao abrir, ao voltar para o app, ao voltar a internet, logo após cada mudança e a cada 2 min).
+- Na nuvem fica uma linha por registro em `records` (ver `supabase/schema.sql`). Excluir vira `deleted = true`.
+- Conflito entre aparelhos: vale a alteração mais recente.
+- Sair da conta apaga os dados do aparelho (continuam na nuvem). "Usar sem conta" mantém tudo só no aparelho.
+- Publicação: Vercel, a partir da branch `main` do repositório privado no GitHub.
+
 ## Próximas versões
 
 - [x] Aba Evolução: gráfico por exercício (carga, força, volume), resumo do mês, séries por grupo na semana
-- [ ] Login e nuvem com Supabase + publicação na Vercel (código privado no GitHub)
+- [x] Login e nuvem com Supabase + publicação na Vercel (código privado no GitHub)
 - [ ] v3: vídeos dos exercícios (biblioteca pronta e gratuita; o campo `videoUrl` já existe)
 - [ ] v3: resumo dos treinos indo para a nota de Academia do segundo cérebro
 - [ ] Cronômetro de descanso (só se pedir)
