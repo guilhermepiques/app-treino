@@ -35,6 +35,21 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 - Trocar ou tirar um exercício durante o treino vale só para aquele treino; a ficha não muda.
 - **Drop set**: dá para planejar na ficha (na última série ou em todas, 1 a 3 drops); essas séries já abrem
   com os drops no treino. O botão "Drop" na série continua para adicionar na hora.
+- **Rest-pause**: só uma etiqueta no exercício da ficha (aparece no treino). O registro de carga e reps não muda.
+
+### Visual
+
+- Tema "Garagem": preto quente, âmbar (`--accent: #ffb000`) e títulos em Oswald, em caixa alta. Cores em `:root` no `src/styles.css`.
+- Ícones gerados por `npm run icons` (mesmas cores). No iPhone, o ícone da Tela de Início só muda se o app for adicionado de novo.
+
+### Academia no segundo cérebro
+
+- `npm run cerebro` baixa os dados da nuvem e escreve 3 notas em `D:\SecondBrain\01-Eu\Academia\`:
+  `Academia.md` (só o bloco entre os marcadores `app-treino`), `Ficha-Atual.md` e `Evolucao.md`.
+- Na primeira vez: `npm run cerebro:login` (pede e-mail e senha no terminal). A senha não fica salva; só a sessão,
+  em `~/.app-treino/cerebro-sessao.json` (fora do repositório).
+- `npm run cerebro -- --backup arquivo.json` usa um backup do app; `--saida pasta` escreve em outra pasta (teste).
+- O script não faz git: depois de rodar, sincronize o cérebro pela skill `/cerebro`.
 
 ### Login e nuvem
 
@@ -49,7 +64,13 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 
 - [x] Aba Evolução: gráfico por exercício (carga, força, volume), resumo do mês, séries por grupo na semana
 - [x] Login e nuvem com Supabase + publicação na Vercel (código privado no GitHub)
-- [ ] v3: vídeos dos exercícios (biblioteca pronta e gratuita; o campo `videoUrl` já existe)
-- [ ] v3: resumo dos treinos indo para a nota de Academia do segundo cérebro
-- [ ] v3: rest-pause (mesma carga, mini pausas: ex. 10 + 3 + 2 reps), aproveitando a estrutura do drop
-- [ ] Cronômetro de descanso (só se pedir)
+- [x] v3: visual novo (Garagem), etiqueta de rest-pause e resumo dos treinos no segundo cérebro
+
+### Ideias para a v4 (ou depois)
+
+- [ ] Enviar a ficha para outra pessoa por um código curto (ex.: os pais, com conta própria)
+- [ ] Triset / circuito (3 ou mais exercícios no mesmo bloco)
+- [ ] Compartilhar o resumo do treino ao terminar (texto para o WhatsApp)
+- [ ] Talvez: marcar falha ou RIR na série
+
+Descartados por enquanto: vídeos dos exercícios e cronômetro de descanso.

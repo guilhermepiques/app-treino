@@ -25,6 +25,7 @@ import {
   IconHistory,
   IconLink,
   IconMinus,
+  IconPause,
   IconPlus,
   IconTrophy,
   IconUp,
@@ -516,6 +517,11 @@ function BlockCard({
                   .filter(Boolean)
                   .join(' · ')}
               </div>
+              {it.restPause && (
+                <div className="rp-tag">
+                  <IconPause size={12} /> Rest-pause
+                </div>
+              )}
               {it.note && <div className="ex-note">{it.note}</div>}
             </div>
             <button className="icon-btn" onClick={() => onMenu(it.id)} aria-label="Opções do exercício">

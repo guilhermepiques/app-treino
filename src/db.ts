@@ -30,7 +30,7 @@ export interface Exercise extends Synced {
   /** Quanto o botão +/− muda a carga, em kg. */
   step: number
   custom: boolean
-  /** Reservado para a v3 (vídeos). */
+  /** Reservado (vídeos: adiados). */
   videoUrl?: string
   createdAt: number
 }
@@ -48,6 +48,8 @@ export interface PlanItem {
   reps?: string
   note?: string
   drop?: PlannedDrop
+  /** Só uma etiqueta: o exercício é feito em rest-pause (o registro de carga e reps não muda). */
+  restPause?: boolean
 }
 
 /** Um bloco com 1 exercício é normal; com 2, é um biset. */

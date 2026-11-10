@@ -2,8 +2,8 @@
 import sharp from 'sharp'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
-const BG = '#0e0f11'
-const FG = '#c8f53c'
+const BG = '#141210'
+const FG = '#ffb000'
 
 const dumbbell = `
   <rect x="64" y="240" width="384" height="32" rx="10" fill="${FG}"/>

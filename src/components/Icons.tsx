@@ -128,6 +128,14 @@ export const IconDrop = (p: P) => (
   </Svg>
 )
 
+/** Rest-pause: mesma carga com mini pausas. */
+export const IconPause = (p: P) => (
+  <Svg {...p}>
+    <path d="M9 6v12" />
+    <path d="M15 6v12" />
+  </Svg>
+)
+
 export const IconSearch = (p: P) => (
   <Svg {...p}>
     <circle cx="11" cy="11" r="6.5" />

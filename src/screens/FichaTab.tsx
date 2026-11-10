@@ -26,6 +26,7 @@ import {
   IconDots,
   IconDrop,
   IconLink,
+  IconPause,
   IconPlus,
   IconUp,
   IconX,
@@ -493,6 +494,22 @@ function PlanBlockCard({
                   ))}
                 </div>
               )}
+            </div>
+            <div className="drop-config">
+              <span className="mini-label">
+                <IconPause size={13} /> Rest-pause
+              </span>
+              <div className="chips wrap">
+                {[false, true].map((on) => (
+                  <Chip
+                    key={String(on)}
+                    active={!!it.restPause === on}
+                    onClick={() => onChange(it.id, (x) => (x.restPause = on || undefined))}
+                  >
+                    {on ? 'Sim' : 'Não'}
+                  </Chip>
+                ))}
+              </div>
             </div>
             <InlineText
               className="note-input"

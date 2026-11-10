@@ -8,10 +8,12 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "icons": "node scripts/gen-icons.mjs",
-    "test:sync": "tsx scripts/test-sync.ts"
+    "test:sync": "tsx scripts/test-sync.ts",
+    "cerebro": "tsx scripts/cerebro.ts",
+    "cerebro:login": "tsx scripts/cerebro.ts --login"
   },
   "dependencies": {
-    "@fontsource/barlow-condensed": "^5.3.0",
+    "@fontsource/oswald": "^5.3.0",
     "@supabase/supabase-js": "^2.119.0",
     "dexie": "^4.4.7",
     "dexie-react-hooks": "^4.4.0",
