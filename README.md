@@ -33,6 +33,8 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 - **Anterior** = a mesma série (1ª, 2ª…) do último treino em que o exercício apareceu.
 - O histórico é por exercício, não por dia ou ficha: trocar de ficha não perde nada.
 - Trocar ou tirar um exercício durante o treino vale só para aquele treino; a ficha não muda.
+- **Drop set**: dá para planejar na ficha (na última série ou em todas, 1 a 3 drops); essas séries já abrem
+  com os drops no treino. O botão "Drop" na série continua para adicionar na hora.
 
 ### Login e nuvem
 
@@ -49,4 +51,5 @@ Build de produção: `npm run build` (sai em `dist/`). Os ícones são gerados c
 - [x] Login e nuvem com Supabase + publicação na Vercel (código privado no GitHub)
 - [ ] v3: vídeos dos exercícios (biblioteca pronta e gratuita; o campo `videoUrl` já existe)
 - [ ] v3: resumo dos treinos indo para a nota de Academia do segundo cérebro
+- [ ] v3: rest-pause (mesma carga, mini pausas: ex. 10 + 3 + 2 reps), aproveitando a estrutura do drop
 - [ ] Cronômetro de descanso (só se pedir)

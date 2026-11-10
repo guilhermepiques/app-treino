@@ -72,3 +72,7 @@ export const isoFromTs = (ts: number) => {
   const d = new Date(ts)
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
+
+/** "drop na última série", "2 drops em todas as séries" */
+export const dropText = (d: { sets: 'last' | 'all'; count: number }) =>
+  `${d.count > 1 ? `${d.count} drops` : 'drop'} ${d.sets === 'last' ? 'na última série' : 'em todas as séries'}`

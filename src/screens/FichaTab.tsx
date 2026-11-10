@@ -24,6 +24,7 @@ import {
   IconChevron,
   IconDown,
   IconDots,
+  IconDrop,
   IconLink,
   IconPlus,
   IconUp,
@@ -395,6 +396,12 @@ function DayEditor({
   )
 }
 
+const DROP_WHERE: { id: 'none' | 'last' | 'all'; label: string }[] = [
+  { id: 'none', label: 'Não' },
+  { id: 'last', label: 'Na última série' },
+  { id: 'all', label: 'Em todas' },
+]
+
 function PlanBlockCard({
   block,
   index,
@@ -453,6 +460,39 @@ function PlanBlockCard({
                   onSave={(v) => onChange(it.id, (x) => (x.reps = v || undefined))}
                 />
               </label>
+            </div>
+            <div className="drop-config">
+              <span className="mini-label">
+                <IconDrop size={13} /> Drop set
+              </span>
+              <div className="chips wrap">
+                {DROP_WHERE.map((w) => (
+                  <Chip
+                    key={w.id}
+                    active={(it.drop?.sets ?? 'none') === w.id}
+                    onClick={() =>
+                      onChange(it.id, (x) => {
+                        x.drop = w.id === 'none' ? undefined : { sets: w.id, count: x.drop?.count ?? 1 }
+                      })
+                    }
+                  >
+                    {w.label}
+                  </Chip>
+                ))}
+              </div>
+              {it.drop && (
+                <div className="chips wrap">
+                  {[1, 2, 3].map((n) => (
+                    <Chip
+                      key={n}
+                      active={it.drop!.count === n}
+                      onClick={() => onChange(it.id, (x) => (x.drop = { sets: x.drop!.sets, count: n }))}
+                    >
+                      {n} {n === 1 ? 'drop' : 'drops'}
+                    </Chip>
+                  ))}
+                </div>
+              )}
             </div>
             <InlineText
               className="note-input"

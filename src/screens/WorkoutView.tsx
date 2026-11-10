@@ -12,7 +12,7 @@ import {
   useExercises,
 } from '../lib/actions'
 import { EMPTY_REFS, cmpPerf, computeRefs, trend, type ExerciseRefs, type Perf } from '../lib/stats'
-import { fix, floorTo, fmtDate, fmtNum, relDate, todayISO, uid } from '../lib/util'
+import { dropText, fix, floorTo, fmtDate, fmtNum, relDate, todayISO, uid } from '../lib/util'
 import { ExercisePicker, ExerciseSettings } from '../components/ExercisePicker'
 import {
   IconBack,
@@ -52,6 +52,8 @@ interface Slot {
   workNo: number
   warm: boolean
   label: string
+  /** Drops planejados na ficha para esta série (0 = nenhum). */
+  plannedDrops: number
 }
 
 const keyOf = (itemId: string, order: number) => `${itemId}:${order}`
@@ -125,8 +127,14 @@ export function WorkoutView({
             workNo: warm ? 0 : workNo,
             warm,
             label: warm ? `Aq${suffix}` : `${workNo}${suffix}`,
+            plannedDrops: 0,
           })
         }
+        // Drop planejado na ficha: na última série válida ou em todas.
+        const totalWork = list.filter((s) => !s.warm).length
+        if (it.drop)
+          for (const s of list)
+            if (!s.warm && (it.drop.sets === 'all' || s.workNo === totalWork)) s.plannedDrops = it.drop.count
         return list
       })
       const rounds = Math.max(0, ...counts)
@@ -153,7 +161,20 @@ export function WorkoutView({
 
   const refsOf = (exId: string) => refs.get(exId) ?? EMPTY_REFS
 
+  /** Completa os drops planejados na ficha (cada um ~25% mais leve que o anterior). */
   const prefill = (slot: Slot): Draft => {
+    const d = basePrefill(slot)
+    if (d.warmup || d.drops.length >= slot.plannedDrops) return d
+    const step = slot.ex?.step ?? 2
+    const drops = [...d.drops]
+    while (drops.length < slot.plannedDrops) {
+      const base = drops[drops.length - 1] ?? d
+      drops.push({ weight: fix(floorTo(base.weight * 0.75, step)), reps: base.reps })
+    }
+    return { ...d, drops }
+  }
+
+  const basePrefill = (slot: Slot): Draft => {
     const r = refsOf(slot.item.exerciseId)
     const ant = slot.workNo ? r.prev[slot.workNo - 1] : undefined
     if (ant) return { weight: ant.weight, reps: ant.reps, warmup: false, drops: ant.drops.map((d) => ({ ...d })) }
@@ -489,6 +510,7 @@ function BlockCard({
                   ex && loadShort(ex.loadMode),
                   workSets(it.id) &&
                     `${workSets(it.id)} ${workSets(it.id) === 1 ? 'série' : 'séries'}${it.reps ? ` de ${it.reps}` : ''}`,
+                  it.drop && dropText(it.drop),
                   r.prevDate && `último ${relDate(r.prevDate)}`,
                 ]
                   .filter(Boolean)
@@ -581,7 +603,15 @@ function SetRow({ slot, ant, best, onClick }: { slot: Slot; ant?: SetLog; best: 
             <DropsText drops={log.drops} />
           </span>
         ) : (
-          <span className="set-ghost">{ant ? `anterior ${fmtNum(ant.weight)} × ${ant.reps}` : 'toque para anotar'}</span>
+          <span className="set-ghost">
+            {ant ? `anterior ${fmtNum(ant.weight)} × ${ant.reps}` : 'toque para anotar'}
+            {slot.plannedDrops > 0 && (
+              <span className="drop-tag">
+                {' '}
+                · <IconDrop size={12} /> {slot.plannedDrops > 1 ? `${slot.plannedDrops} drops` : 'com drop'}
+              </span>
+            )}
+          </span>
         )}
       </span>
       {log ? (

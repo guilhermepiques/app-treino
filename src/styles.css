@@ -1979,3 +1979,32 @@ p {
 .sync-status.offline {
   color: var(--down);
 }
+
+/* ---------- drop set na ficha ---------- */
+
+.drop-config {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mini-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+.drop-config .chip {
+  min-height: 34px;
+  font-size: 14px;
+}
+
+.drop-tag {
+  color: var(--accent);
+}

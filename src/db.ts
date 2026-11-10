@@ -35,12 +35,19 @@ export interface Exercise extends Synced {
   createdAt: number
 }
 
+/** Drop set planejado na ficha: em quais séries e quantos drops em cada. */
+export interface PlannedDrop {
+  sets: 'last' | 'all'
+  count: number
+}
+
 export interface PlanItem {
   id: string
   exerciseId: string
   sets: number
   reps?: string
   note?: string
+  drop?: PlannedDrop
 }
 
 /** Um bloco com 1 exercício é normal; com 2, é um biset. */
