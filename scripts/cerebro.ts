@@ -334,7 +334,8 @@ function evolucaoNote(data: TrainingData, previous: string | null, hoje: string)
   }
   if (!data.sessionsByEx.size) out.push('', 'Nenhum treino finalizado ainda.')
 
-  const resumo = `Evolução na academia: treinos por mês e início, recorde e último treino de cada exercício (${data.done.length} treinos registrados).`
+  const n = data.done.length
+  const resumo = `Evolução na academia: treinos por mês e início, recorde e último treino de cada exercício (${n} ${n === 1 ? 'treino registrado' : 'treinos registrados'}).`
   return [
     frontmatter('nota', criadoOf(previous, hoje), hoje, resumo),
     '# Evolução',
